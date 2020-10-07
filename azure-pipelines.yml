@@ -1,23 +1,30 @@
-
-resources:
-- repo: self
-
+env:
+  STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+  STORAGE_CONTAINER_NAME: vhd
+  BASE_IMAGE_NAME: baked-centos-7
+  REGION: westus
+  RESOURCE_GROUP: vm-build
+  VM_USERNAME: ${{ secrets.VM_USERNAME }}
+  VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+  SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
 jobs:
-
-- job: Job_1
-  displayName: Setup
-  condition: succeeded()
-  pool:
-    name: Hosted Ubuntu 1604
-  variables:
-    resource-group: 'vm-pack-rg'
-    region: 'eastus'
-    vm-name: 'pack-vm'
-
-  steps:
-  - task: AzureCLI@1
-    displayName: 'Deploy Builder VM to Azure'
-    inputs:
-      azureSubscription: 'Azure subscription 1(88f43e59-c0f4-416e-827f-8d96aa513c20)'
-      scriptPath: 'create-inception.sh'
-      arguments: '$(resource-group) $(region) $(vm-name) $(vm-password)'
+  vmbuild:
+    runs-on: ubuntu-latest
+    env:
+      BUILDER_VM_NAME: vm-packer
+      BUILDER_VM_SIZE: Standard_D4s_v3
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Show all files
+      run: ls -l
+    - name: Deploy Builder VM
+      run: |
+        ./create-inception.sh "$RESOURCE_GROUP" \
+                            "$REGION" \
+                            "$BUILDER_VM_NAME" \
+                            "$VM_USERNAME" \
+                            "$VM_PASSWORD" \
+                            "$BUILDER_VM_SIZE"
