@@ -24,6 +24,12 @@ echo "Does cloud init file look ok?"
 cat cloud-init-gen.yaml
 
 echo "Building inception vm $VM_NAME in Resource Group $RESOURCE_GROUP in $REGION"
+
+echo "Resource Group: ${RESOURCE_GROUP}"
+echo "VM Name: ${VM_NAME}"
+echo "Admin username: ${VM_USERNAME}"
+echo "Admin password: ${VM_PASSWORD}"
+echo "VM size: ${VM_SIZE}"
 #Create Azure Builder VM
 az vm create \
     --resource-group $RESOURCE_GROUP \
