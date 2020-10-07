@@ -2,8 +2,8 @@ resources:
 - repo: self
 
 variables:
-  vm-username: ${{ secrets.VM_USERNAME }}
-  vm-password: ${{ secrets.VM_PASSWORD }}
+  vm-username: vagrant
+  vm-password: vagrant
   vm-size: Standard_D4s_v3
 
 jobs:
