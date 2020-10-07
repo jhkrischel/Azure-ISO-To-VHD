@@ -1,19 +1,24 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
-trigger:
-- master
+resources:
+- repo: self
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- job: Job_1
+  displayName: Setup
+  condition: succeeded()
+  pool:
+    name: Hosted Ubuntu 1604
+  variables:
+    resource-group: 'vm-pack-rg'
+    region: 'eastus'
+    vm-name: 'pack-vm'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  steps:
+  - task: AzureCLI@1
+    displayName: 'Deploy Builder VM to Azure'
+    inputs:
+      azureSubscription: '$(subscription-id)'
+      scriptPath: 'create-inception.sh'
+      arguments: '$(resource-group) $(region) $(vm-name) $(vm-password)'
+
