@@ -3,7 +3,7 @@ resources:
 
 variables:
   vm-username: vagrant
-  vm-password: vagrant12345
+  vm-password: vagrant@1234
   vm-size: Standard_D4s_v3
 
 jobs:
