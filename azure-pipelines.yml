@@ -25,3 +25,21 @@ jobs:
       azureSubscription: 'Azure subscription 1(88f43e59-c0f4-416e-827f-8d96aa513c20)'
       scriptPath: 'create-inception.sh'
       arguments: '$(resource-group) $(region) $(vm-name) $(vm-username) $(vm-password) $(vm-size)'
+
+- job: Job_2
+  displayName: Build
+  dependsOn: Job_1
+  condition: succeeded()
+  pool:
+    name: Hosted Ubuntu 1604
+  variables:
+    resource-group: 'vm-pack-rg'
+    vm-name: 'pack-vm'
+
+  steps:
+  - task: AzureCLI@1
+    displayName: 'Run Packer Build on Builder VM'
+    inputs:
+      azureSubscription: 'Azure subscription 1(88f43e59-c0f4-416e-827f-8d96aa513c20)'
+      scriptPath: 'run-packer-build.sh'
+      arguments: '$(resource-group) $(vm-name)'
